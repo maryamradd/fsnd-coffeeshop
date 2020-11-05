@@ -16,7 +16,7 @@ CORS(app)
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
-#db_drop_and_create_all()
+# db_drop_and_create_all()
 
 # ROUTES
 
@@ -33,9 +33,6 @@ def get_drinks():
         abort(422)
 
 
-
-
-
 @app.route('/drinks-detail')
 @requires_auth('get:drinks-detail')
 def get_drinks_details(jwt):
@@ -47,7 +44,6 @@ def get_drinks_details(jwt):
         }), 200
     except:
         abort(422)
-
 
 
 @app.route('/drinks', methods=['POST'])
@@ -64,14 +60,13 @@ def create_drinks(jwt):
     try:
         new_drink = Drink(title=drink_title, recipe=drink_recipe)
         new_drink.insert()
-        
+
         return jsonify({
             'success': True,
             'drinks': [new_drink.long()]
         }), 200
     except:
         abort(500)
-
 
 
 @app.route('/drinks/<id>', methods=['PATCH'])
@@ -83,7 +78,7 @@ def update_drinks(jwt, id):
 
     if drink is None:
         abort(404)
-    
+
     try:
         if 'title' in body:
             drink.title = body['title']
@@ -99,15 +94,12 @@ def update_drinks(jwt, id):
         }), 200
     except:
         abort(500)
-    
-
-
 
 
 @app.route('/drinks/<id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 def delete_drinks(jwt, id):
-    
+
     drink = Drink.query.get(id)
 
     if drink is None:
@@ -119,13 +111,12 @@ def delete_drinks(jwt, id):
             'success': True,
             "delete": drink.id
         }), 200
-    
+
     except:
         abort(500)
 
 
 # Error Handling
-
 
 
 @app.errorhandler(422)
@@ -137,26 +128,22 @@ def unprocessable(error):
     }), 422
 
 
-
-
 @app.errorhandler(404)
 def notFound(error):
     return jsonify({
-        "success": False, 
+        "success": False,
         "error": 404,
         "message": "resource not found"
-        }), 404
+    }), 404
 
 
 @app.errorhandler(400)
 def badRequest(error):
     return jsonify({
-        "success": False, 
+        "success": False,
         "error": 400,
         "message": "bad request"
-        }), 400
-
-
+    }), 400
 
 
 @app.errorhandler(AuthError)

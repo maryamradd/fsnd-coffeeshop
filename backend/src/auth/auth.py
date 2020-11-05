@@ -15,6 +15,7 @@ AuthError Exception
 A standardized way to communicate auth failure modes
 '''
 
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
@@ -54,7 +55,6 @@ def get_token_auth_header():
     return header_parts[1]
 
 
-
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         raise AuthError({
@@ -69,21 +69,6 @@ def check_permissions(permission, payload):
         }, 403)
 
     return True
-
-
-'''
-@TODO implement verify_decode_jwt(token) method
-    @INPUTS
-        token: a json web token (string)
-
-    it should be an Auth0 token with key id (kid)
-    it should verify the token using Auth0 /.well-known/jwks.json
-    it should decode the payload from the token
-    it should validate the claims
-    return the decoded payload
-
-    !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
-'''
 
 
 def verify_decode_jwt(token):
@@ -138,8 +123,6 @@ def verify_decode_jwt(token):
         'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
     }, 400)
-
-
 
 
 def requires_auth(permission=''):
